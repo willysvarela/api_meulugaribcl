@@ -13,5 +13,13 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "prisma generate",
+    "prisma:introspect": "prisma introspect",
+    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate",    
+    "dev": "netlify dev"
   }
 }
