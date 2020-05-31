@@ -27,6 +27,22 @@ router.get("/evento/disponivel", async (req, res) => {
   res.send(eventos);
 });
 
+router.get("/evento/detalhes/:id", async (req, res) => {
+  try {
+    const id_evento = parseInt(req.params.id);
+    const result = await prisma.pessoa.findMany({
+      include: { lugar: { where: { id_evento, status: "R" } } }
+    });
+    const pessoas = result.filter((pessoa) => pessoa.lugar.length > 0);
+    const evento = await prisma.evento.findOne({
+      where: { id: id_evento }
+    });
+    res.json({ evento, pessoas });
+  } catch (e) {
+    res.send({ error: e.message });
+  }
+});
+
 router.get("/evento/:id", async (req, res) => {
   try {
     const evento = await prisma.evento.findOne({
