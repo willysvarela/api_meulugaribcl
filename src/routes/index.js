@@ -73,7 +73,7 @@ router.post("/pessoa", async (req, res) => {
     const { nome, email, telefone, idade, categoria } = req.body;
     console.log(req.body);
     const result = await prisma.pessoa.upsert({
-      where: { email: email },
+      where: { telefone: telefone },
       create: { nome, email, telefone, idade, categoria },
       update: { nome, email, telefone, idade, categoria }
     });
@@ -97,6 +97,7 @@ router.post("/pessoa/reservar", async (req, res) => {
     res.status(409).send({ message: "Você já fez reservas essa semana" });
   } else {
     let results = [];
+    console.log("oi", lugares);
     for (let lugar of lugares) {
       results.push(
         await prisma.lugar.update({

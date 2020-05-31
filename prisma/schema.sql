@@ -29,4 +29,4 @@ foreign key (id_pessoa) references Pessoa(id),
 foreign key (id_evento) references Evento(id)
 );
 
-CREATE UNIQUE INDEX `idx_pessoa_email`  ON `db_meulugaribcl`.`pessoa` (email) COMMENT '' ALGORITHM DEFAULT LOCK DEFAULT;
+CREATE UNIQUE INDEX `idx_pessoa_telefone`  ON `db_meulugaribcl`.`pessoa` (telefone) COMMENT '' ALGORITHM DEFAULT LOCK DEFAULT;

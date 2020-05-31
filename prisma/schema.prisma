@@ -33,11 +33,11 @@ model lugar {
 
 model pessoa {
   categoria String? @default("individual")
-  email     String  @unique
+  email     String
   id        Int     @default(autoincrement()) @id
   idade     String
   nome      String
   senha     String? @default("")
-  telefone  String
+  telefone  String  @unique
   lugar     lugar[]
 }
