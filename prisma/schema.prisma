@@ -13,7 +13,16 @@ model evento {
   nome        String
   qtd_lugares Int
   status      String?  @default("D")
+  tipo        String?  @default("familia")
   lugar       lugar[]
+}
+
+model evento2 {
+  data_evento DateTime
+  id          Int      @default(autoincrement()) @id
+  nome        String
+  qtd_lugares Int
+  status      String?  @default("D")
 }
 
 model lugar {

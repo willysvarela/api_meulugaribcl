@@ -12,7 +12,7 @@ categoria varchar(20) default "individual"
 create table Evento(
 id integer not null auto_increment primary key,
 nome varchar(200) not null,
-data_evento date not null,
+data_evento datetime not null,
 qtd_lugares integer not null,
 status varchar(2) default "D" /*D: DISPONIVEL F: Finalizado*/
 );
@@ -30,3 +30,4 @@ foreign key (id_evento) references Evento(id)
 );
 
 CREATE UNIQUE INDEX `idx_pessoa_telefone`  ON `db_meulugaribcl`.`pessoa` (telefone) COMMENT '' ALGORITHM DEFAULT LOCK DEFAULT;
+alter table evento add column tipo varchar(20) default "familia"
