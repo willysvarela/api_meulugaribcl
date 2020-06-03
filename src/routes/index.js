@@ -58,10 +58,13 @@ router.get("/evento/:id", async (req, res) => {
 router.get("/lugar/evento/:id_evento", async (req, res) => {
   try {
     const id_evento = parseInt(req.params.id_evento);
+
+    const evento = await prisma.evento.findOne({ where: { id: id_evento } });
+
     const lugares = await prisma.lugar.findMany({
       where: { id_evento: id_evento }
     });
-    res.status(201).send(lugares);
+    res.status(201).send({ evento, lugares });
   } catch (e) {
     res.status(401).send({ error: ERROR.GET_GENERIC_ERROR });
   }
