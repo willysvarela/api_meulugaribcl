@@ -1,8 +1,11 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const router = express.Router();
+const prisma = new PrismaClient({
+  log: ["query"]
+});
 
-const prisma = new PrismaClient();
+const CONSTANTS = require("./../constants");
 
 const ERROR = {
   GET_GENERIC_ERROR:
@@ -97,10 +100,11 @@ router.post("/pessoa/reservar", async (req, res) => {
       .status(409)
       .send({ message: "As Cadeiras escolhidas já foram reservadas" });
   } else if (emailJaUtilizado.length > 0) {
-    res.status(409).send({ message: "Você já fez reservas essa semana" });
+    res
+      .status(409)
+      .send({ message: "Você já fez reservas no período disponível" });
   } else {
     let results = [];
-    console.log("oi", lugares);
     for (let lugar of lugares) {
       results.push(
         await prisma.lugar.update({
@@ -152,24 +156,84 @@ router.get("/dev/teste/:id", async (req, res) => {
   res.send(pessoa);
 });
 
+const getEventoPorLugar = async (id_lugar) => {
+  try {
+    const evento = await prisma.lugar.findOne({
+      where: { id: id_lugar },
+      select: { evento: true }
+    });
+    return evento;
+  } catch (e) {
+    console.log(e.message);
+    throw console.log(e.message);
+  }
+};
+
 const checkEmailJaUtilizado = async (lugares) => {
   const id_pessoa = lugares[0].id_pessoa;
-
-  const pessoa = await prisma.lugar.findMany({
-    where: {
-      pessoa: {
-        id: {
-          equals: id_pessoa
-        }
-      },
-      evento: {
-        status: {
-          equals: "D"
+  const evento = await getEventoPorLugar(lugares[0].id);
+  const data_atual = new Date(+evento.evento.data_evento);
+  const data_duas_semanas_atras = new Date(+evento.evento.data_evento);
+  data_duas_semanas_atras.setDate(data_duas_semanas_atras.getDate() - 14);
+  //evento jovem
+  if (evento.evento.tipoEvento === CONSTANTS.EVENTO_JOVEM) {
+    /*const pessoa = await prisma.lugar.findMany({
+      where: {
+        pessoa: {
+          id: {
+            equals: id_pessoa
+          }
+        },
+        evento: {
+          tipoEvento: {
+            equals: CONSTANTS.EVENTO_JOVEM
+          },
+          status: {
+            equals: "D"
+          }
         }
       }
-    }
-  });
-  return pessoa;
+    });*/
+    return [];
+  } else {
+    //culto familiar
+    const pessoa = await prisma.lugar.findMany({
+      where: {
+        pessoa: {
+          id: {
+            equals: id_pessoa
+          }
+        },
+        evento: {
+          tipoEvento: {
+            equals: CONSTANTS.EVENTO_FAMILIAR
+          },
+          OR: [
+            {
+              status: {
+                equals: "D"
+              }
+            },
+            {
+              AND: [
+                {
+                  data_evento: {
+                    lt: data_atual
+                  }
+                },
+                {
+                  data_evento: {
+                    gt: data_duas_semanas_atras
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    });
+    return pessoa;
+  }
 };
 
 module.exports = router;
