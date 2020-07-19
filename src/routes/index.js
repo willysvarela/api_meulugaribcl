@@ -58,6 +58,20 @@ router.get("/evento/:id", async (req, res) => {
 });
 
 //lugares
+
+router.post("/lugar/cancelar",  async(req, res) => {
+  try{
+    const id_pessoa = parseInt(req.body.id_pessoa);
+    const id_evento = parseInt(req.body.id_evento);
+    const result = await prisma.executeRaw(`update lugar set id_pessoa = null, nome_reservado = null, data_reserva = null, status = "D" where id_evento = ${id_evento} and id_pessoa = ${id_pessoa};`);
+    console.log(result);
+    res.json({updated: result});
+  }catch(e){
+    console.log(e.message);
+    res.json({error: e.message});
+  }
+});
+
 router.get("/lugar/evento/:id_evento", async (req, res) => {
   try {
     const id_evento = parseInt(req.params.id_evento);
