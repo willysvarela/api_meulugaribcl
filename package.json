@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@material-ui/icons": "^4.9.1",
-    "@prisma/cli": "^2.0.0-beta.7",
+    "@prisma/cli": "^2.1.0",
     "@prisma/client": "^2.0.0-beta.7",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -19,7 +19,7 @@
     "build": "prisma generate",
     "prisma:introspect": "prisma introspect",
     "prisma:generate": "prisma generate",
-    "postinstall": "prisma generate",    
+    "postinstall": "prisma generate",
     "dev": "netlify dev"
   }
 }
