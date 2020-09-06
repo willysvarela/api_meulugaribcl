@@ -8,24 +8,24 @@ datasource db {
 }
 
 model evento {
-  data_evento DateTime
   id          Int      @default(autoincrement()) @id
   nome        String
+  data_evento DateTime
   qtd_lugares Int
   status      String?  @default("D")
   tipo        String?  @default("familia")
-  tipoEvento  String?  @default("jovem")
+  tipoEvento  String?  @default("familiar")
   lugar       lugar[]
 }
 
 model lugar {
-  data_reserva   DateTime?
   id             Int       @default(autoincrement()) @id
-  id_evento      Int
-  id_pessoa      Int?
-  nome_reservado String?
   posicao        String
+  nome_reservado String?
+  id_pessoa      Int?
+  id_evento      Int
   status         String?   @default("D")
+  data_reserva   DateTime?
   evento         evento    @relation(fields: [id_evento], references: [id])
   pessoa         pessoa?   @relation(fields: [id_pessoa], references: [id])
 
@@ -34,12 +34,12 @@ model lugar {
 }
 
 model pessoa {
-  categoria String? @default("individual")
-  email     String
   id        Int     @default(autoincrement()) @id
-  idade     String
   nome      String
-  senha     String? @default("")
+  email     String
   telefone  String  @unique
+  idade     String
+  senha     String? @default("")
+  categoria String? @default("individual")
   lugar     lugar[]
 }

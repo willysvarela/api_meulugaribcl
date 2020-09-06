@@ -1,9 +1,7 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const router = express.Router();
-const prisma = new PrismaClient({
-  log: ["query"]
-});
+const prisma = new PrismaClient();
 
 const CONSTANTS = require("./../constants");
 
@@ -134,6 +132,37 @@ router.post("/pessoa/reservar", async (req, res) => {
     }
     const solvedPromises = Promise.all(results);
     res.send({ result: results });
+  }
+});
+
+router.post("/kids/reservar", async (req, res) => {
+  const lugares = req.body.lugares;
+  let results = [];
+try{ 
+    for (let lugar of lugares) {
+      results.push(
+        await prisma.lugar.create({
+          data: {
+            nome_reservado: lugar.nome_reservado,
+            posicao: 'Kid',
+            pessoa: {
+              connect: {id: lugar.id_pessoa}
+            },
+            evento: {
+              connect: {id: lugar.id_evento}
+            },
+            status: "R",
+            data_reserva: new Date()
+          }
+        })
+      );
+    }
+    const solvedPromises = Promise.all(results);
+    res.send({ result: results });
+  }catch(e){
+    res
+    .status(500)
+    .send("Ocorreu um erro na reserva. Por favor tente novamente mais tarde" + e.code + ' - ' + e.meta.details);
   }
 });
 
