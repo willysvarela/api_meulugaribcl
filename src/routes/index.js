@@ -57,16 +57,18 @@ router.get("/evento/:id", async (req, res) => {
 
 //lugares
 
-router.post("/lugar/cancelar",  async(req, res) => {
-  try{
+router.post("/lugar/cancelar", async (req, res) => {
+  try {
     const id_pessoa = parseInt(req.body.id_pessoa);
     const id_evento = parseInt(req.body.id_evento);
-    const result = await prisma.executeRaw(`update lugar set id_pessoa = null, nome_reservado = null, data_reserva = null, status = "D" where id_evento = ${id_evento} and id_pessoa = ${id_pessoa};`);
+    const result = await prisma.executeRaw(
+      `update lugar set id_pessoa = null, nome_reservado = null, data_reserva = null, status = "D" where id_evento = ${id_evento} and id_pessoa = ${id_pessoa};`
+    );
     console.log(result);
-    res.json({updated: result});
-  }catch(e){
+    res.json({ updated: result });
+  } catch (e) {
     console.log(e.message);
-    res.json({error: e.message});
+    res.json({ error: e.message });
   }
 });
 
@@ -104,52 +106,56 @@ router.post("/pessoa", async (req, res) => {
 
 router.post("/pessoa/reservar", async (req, res) => {
   const lugares = req.body.lugares;
-
-  const lugaresReservados = await checkReservados(lugares);
-  const emailJaUtilizado = await checkEmailJaUtilizado(lugares);
-  if (lugaresReservados.length > 0) {
-    res
-      .status(409)
-      .send({ message: "As Cadeiras escolhidas já foram reservadas" });
-  } else if (emailJaUtilizado.length > 0) {
-    res
-      .status(409)
-      .send({ message: "Você já fez reservas no período disponível" });
-  } else {
-    let results = [];
-    for (let lugar of lugares) {
-      results.push(
-        await prisma.lugar.update({
-          where: { id: lugar.id },
-          data: {
-            nome_reservado: lugar.nome_reservado,
-            pessoa: { connect: { id: lugar.id_pessoa } },
-            status: "R",
-            data_reserva: new Date()
-          }
-        })
-      );
+  try {
+    const lugaresReservados = await checkReservados(lugares);
+    const emailJaUtilizado = await checkEmailJaUtilizado(lugares);
+    if (lugaresReservados.length > 0) {
+      res
+        .status(409)
+        .send({ message: "As Cadeiras escolhidas já foram reservadas" });
+    } else if (emailJaUtilizado.length > 0) {
+      res
+        .status(409)
+        .send({ message: "Você já fez reservas no período disponível" });
+    } else {
+      let results = [];
+      for (let lugar of lugares) {
+        results.push(
+          await prisma.lugar.update({
+            where: { id: lugar.id },
+            data: {
+              nome_reservado: lugar.nome_reservado,
+              pessoa: { connect: { id: lugar.id_pessoa } },
+              status: "R",
+              data_reserva: new Date()
+            }
+          })
+        );
+      }
+      const solvedPromises = Promise.all(results);
+      res.send({ result: solvedPromises });
     }
-    const solvedPromises = Promise.all(results);
-    res.send({ result: results });
+  } catch (e) {
+    console.log({ error: e });
+    res.send({ error: e.message });
   }
 });
 
 router.post("/kids/reservar", async (req, res) => {
   const lugares = req.body.lugares;
   let results = [];
-try{ 
+  try {
     for (let lugar of lugares) {
       results.push(
         await prisma.lugar.create({
           data: {
             nome_reservado: lugar.nome_reservado,
-            posicao: 'Kid',
+            posicao: "Kid",
             pessoa: {
-              connect: {id: lugar.id_pessoa}
+              connect: { id: lugar.id_pessoa }
             },
             evento: {
-              connect: {id: lugar.id_evento}
+              connect: { id: lugar.id_evento }
             },
             status: "R",
             data_reserva: new Date()
@@ -159,10 +165,15 @@ try{
     }
     const solvedPromises = Promise.all(results);
     res.send({ result: results });
-  }catch(e){
+  } catch (e) {
     res
-    .status(500)
-    .send("Ocorreu um erro na reserva. Por favor tente novamente mais tarde" + e.code + ' - ' + e.meta.details);
+      .status(500)
+      .send(
+        "Ocorreu um erro na reserva. Por favor tente novamente mais tarde" +
+          e.code +
+          " - " +
+          e.meta.details
+      );
   }
 });
 
