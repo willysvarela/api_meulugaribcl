@@ -20,12 +20,17 @@ router.get("/evento", async (req, res) => {
 }); 
 
 router.get("/evento/disponivel", async (req, res) => {
-  const eventos = await prisma.evento.findMany({
+  try{const eventos = await prisma.evento.findMany({
     where: {
       status: "D"
     }
   });
+  
   res.send(eventos);
+  }catch(e) {
+    console.log(e);
+    res.send(e.message);
+  }
 });
 
 router.get("/evento/detalhes/:id", async (req, res) => {
