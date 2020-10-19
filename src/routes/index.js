@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 router.get("/evento", async (req, res) => {
   const eventos = await prisma.evento.findMany();
   res.json(eventos);
-});
+}); 
 
 router.get("/evento/disponivel", async (req, res) => {
   const eventos = await prisma.evento.findMany({
@@ -141,7 +141,7 @@ router.post("/pessoa/reservar", async (req, res) => {
   }
 });
 
-router.post("/kids/reservar", async (req, res) => {
+router.post("/dept/reservar", async (req, res) => {
   const lugares = req.body.lugares;
   let results = [];
   try {
@@ -150,7 +150,7 @@ router.post("/kids/reservar", async (req, res) => {
         await prisma.lugar.create({
           data: {
             nome_reservado: lugar.nome_reservado,
-            posicao: "Kid",
+            posicao: "I",
             pessoa: {
               connect: { id: lugar.id_pessoa }
             },
@@ -229,8 +229,9 @@ const checkEmailJaUtilizado = async (lugares) => {
   const data_atual = new Date(+evento.evento.data_evento);
   const data_duas_semanas_atras = new Date(+evento.evento.data_evento);
   data_duas_semanas_atras.setDate(data_duas_semanas_atras.getDate() - 14);
-  //evento jovem
-  if (evento.evento.tipoEvento === CONSTANTS.EVENTO_JOVEM) {
+  
+  //eventos gerais
+  if (evento.evento.tipoEvento !== CONSTANTS.EVENTO_FAMILIAR) {
     /*const pessoa = await prisma.lugar.findMany({
       where: {
         pessoa: {

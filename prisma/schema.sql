@@ -13,8 +13,15 @@ CREATE TABLE IF NOT EXISTS `evento` (
   `data_evento` datetime NOT NULL,
   `qtd_lugares` int(11) NOT NULL,
   `status` varchar(2) DEFAULT 'D',
-  `tipo` varchar(20) DEFAULT 'familia',
-  `tipoEvento` varchar(20) DEFAULT 'familiar',
+  `tipoLayout` varchar(20) DEFAULT 'familia', /*define o layout do culto*/
+  `tipoEvento` varchar(20) DEFAULT 'familiar', /*define o periodo de reserva*/
+  `tipoReserva` VARCHAR(20) DEFAULT 'cadeiras';
+  
+  /*
+  tipoReserva:
+  - cadeiras: Reserva por seleção de cadeiras
+  - nomes: Reserva por nome do individuo, sem cadeiras
+  */
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=461 DEFAULT CHARSET=utf8;
 
@@ -56,3 +63,4 @@ CREATE TABLE IF NOT EXISTS `pessoa` (
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
