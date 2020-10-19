@@ -14,7 +14,7 @@ model evento {
   qtd_lugares Int
   status      String?  @default("D")
   tipoLayout  String?  @default("familia")
-  tipoEvento  String?  @default("jovem")
+  tipoEvento  String?  @default("familiar")
   tipoReserva String?  @default("cadeiras")
   lugar       lugar[]
 }
