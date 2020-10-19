@@ -8,7 +8,7 @@ datasource db {
 }
 
 model evento {
-  id          Int      @default(autoincrement()) @id
+  id          Int      @id @default(autoincrement())
   nome        String
   data_evento DateTime
   qtd_lugares Int
@@ -20,7 +20,7 @@ model evento {
 }
 
 model lugar {
-  id             Int       @default(autoincrement()) @id
+  id             Int       @id @default(autoincrement())
   posicao        String
   nome_reservado String?
   id_pessoa      Int?
@@ -35,7 +35,7 @@ model lugar {
 }
 
 model pessoa {
-  id        Int     @default(autoincrement()) @id
+  id        Int     @id @default(autoincrement())
   nome      String
   email     String
   telefone  String  @unique
