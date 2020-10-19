@@ -7,7 +7,6 @@
   "author": "WIllys Varela",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/icons": "^4.9.1",
     "@prisma/cli": "^2.6.2",
     "@prisma/client": "^2.6.2",
     "cors": "^2.8.5",
