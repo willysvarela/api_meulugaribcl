@@ -13,8 +13,9 @@ model evento {
   data_evento DateTime
   qtd_lugares Int
   status      String?  @default("D")
-  tipo        String?  @default("familia")
-  tipoEvento  String?  @default("familiar")
+  tipoLayout  String?  @default("familia")
+  tipoEvento  String?  @default("jovem")
+  tipoReserva String?  @default("cadeiras")
   lugar       lugar[]
 }
 

@@ -3,4 +3,11 @@ const CONSTANTS = {
   EVENTO_FAMILIAR: "familiar"
 };
 
-module.exports = CONSTANTS;
+const CATEGORIAS = {
+  culto: "culto",
+  jovem: "jovem",
+  teens: "teens",
+  kids: "kids"
+}
+
+module.exports = {CONSTANTS, CATEGORIAS};
