@@ -8,7 +8,12 @@ dotenv.config();
 const routes = require("./routes/index");
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 
